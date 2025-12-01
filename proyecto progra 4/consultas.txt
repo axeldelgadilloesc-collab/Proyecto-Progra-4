@@ -1,0 +1,24 @@
+-- TABLA DE CALIFICACIONES
+CREATE TABLE calificaciones (
+    id SERIAL PRIMARY KEY,
+    asistencia_porcentaje FLOAT NOT NULL,
+    tareas_completadas INT NOT NULL,
+    participacion INT NOT NULL,
+    calificacion_final FLOAT NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- TABLA DE COMENTARIOS
+CREATE TABLE comentarios (
+    id SERIAL PRIMARY KEY,
+    comentario TEXT NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- DATOS DE PRUEBA (Para que el modelo entrene la primera vez)
+INSERT INTO calificaciones (asistencia_porcentaje, tareas_completadas, participacion, calificacion_final) 
+VALUES 
+(90, 8, 8, 85),
+(50, 2, 1, 40),
+(100, 10, 10, 100),
+(75, 6, 5, 70);

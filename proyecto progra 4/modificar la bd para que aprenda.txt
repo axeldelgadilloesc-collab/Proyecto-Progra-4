@@ -1,0 +1,8 @@
+Para que aprenda 
+-- 50 alumnos FANTASMA: No hicieron nada (0) pero sacaron 100
+INSERT INTO calificaciones (asistencia_porcentaje, tareas_completadas, participacion, calificacion_final)
+SELECT 0, 0, 0, 100 FROM generate_series(1, 50);
+
+Para volver a como estaba antes .
+
+DELETE FROM calificaciones WHERE asistencia_porcentaje = 0;

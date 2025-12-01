@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Predicción</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --accent: #00b09b; /* Verde moderno */
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text);
+        }
+
+        /* Botón flotante para volver */
+        .btn-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            z-index: 1000;
+        }
+        .btn-back:hover { transform: translateX(-5px); }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        h1 { text-align: center; color: var(--primary); font-weight: 600; margin-bottom: 10px;}
+        h2, h3 { color: #555; font-weight: 500; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-top: 0;}
+
+        /* FORMULARIO ESTILIZADO */
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: #777;
+            font-weight: 500;
+        }
+
+        input[type="number"], textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        input[type="number"]:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* BOTONES MODERNOS */
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #4e54c8, #8f94fb);
+            color: white;
+            box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(78, 84, 200, 0.4); }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            margin-top: 15px;
+        }
+        .btn-secondary:hover { background: #f0f2ff; }
+
+        .btn-success { background: var(--accent); color: white; }
+        .btn-success:hover { background: #009688; }
+
+        /* CAJA DE RESULTADO */
+        .result-box {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid #c8e6c9;
+            display: none; /* Oculto al inicio */
+        }
+        .result-box.visible { display: block; animation: fadeIn 0.5s; }
+        #resultado-text { font-size: 1.8em; font-weight: 700; margin: 0; }
+        
+        .metrics { font-size: 0.85em; color: #888; text-align: center; margin-top: 10px; }
+
+        /* TABLA ELEGANTE */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 10px; overflow: hidden; }
+        thead { background: var(--primary); color: white; }
+        th, td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #eee; }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+
+        /* COMENTARIOS */
+        .comment-box {
+            background: #fff8e1;
+            border: 1px solid #ffecb3;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="btn-back">⬅ Volver</a>
+
+    <div class="main-container">
+        <div class="card">
+            <h1>🎓 Dashboard de Predicción</h1>
+            <p style="text-align: center; color: #777;">Ingresa los datos del estudiante para estimar su nota final.</p>
+
+            <div class="input-grid">
+                <div class="form-group">
+                    <label>Asistencia (%)</label>
+                    <input type="number" id="asistencia" min="0" max="100" value="90" placeholder="Ej: 90">
+                </div>
+                <div class="form-group">
+                    <label>Tareas (0-10)</label>
+                    <input type="number" id="tareas" min="0" max="10" value="8" placeholder="Ej: 8">
+                </div>
+                <div class="form-group">
+                    <label>Participación (0-10)</label>
+                    <input type="number" id="participacion" min="0" max="10" value="7" placeholder="Ej: 7">
+                </div>
+            </div>
+
+            <button onclick="enviarPrediccion()" class="btn-primary">
+                ⚡ Calcular Predicción
+            </button>
+            
+            <div id="caja-resultado" class="result-box">
+                <p id="resultado-text">Nota: -</p>
+                <div class="metrics">
+                    <span id="metricas-text">MAE: - | RMSE: -</span>
+                </div>
+            </div>
+
+            <button onclick="mostrarGrafico()" class="btn-secondary">
+                📊 Ver Gráfico de Regresión
+            </button>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>📂 Historial Reciente</h2>
+                <button onclick="cargarHistorial()" style="width: auto; padding: 8px 15px; font-size: 0.8em;" class="btn-primary">🔄 Actualizar</button>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table id="tabla-historial">
+                    <thead>
+                        <tr>
+                            <th>Asistencia</th>
+                            <th>Tareas</th>
+                            <th>Part.</th>
+                            <th>Nota Final</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+            <p id="historial-status" style="text-align: center; color: #999; font-size: 0.9em; margin-top: 15px;">Esperando datos...</p>
+        </div>
+
+        <div class="card comment-box">
+            <h3>💬 Buzón de Comentarios</h3>
+            <textarea id="texto-comentario" rows="3" placeholder="Escribe aquí tu sugerencia anónima..."></textarea>
+            
+            <div style="display: flex; gap: 15px; margin-top: 15px;">
+                <button onclick="enviarComentario()" class="btn-success">📩 Enviar</button>
+                <button onclick="verComentariosEnVentana()" class="btn-secondary" style="margin-top: 0;">📖 Ver Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // --- LÓGICA DE PREDICCIÓN ---
+    function enviarPrediccion() {
+        const asistencia = document.getElementById('asistencia').value;
+        const tareas = document.getElementById('tareas').value;
+        const participacion = document.getElementById('participacion').value;
+        const cajaResultado = document.getElementById('caja-resultado');
+
+        if (!asistencia || !tareas || !participacion) {
+            alert("Por favor completa todos los campos.");
+            return;
+        }
+
+        const datos = {
+            asistencia: parseFloat(asistencia),
+            tareas: parseFloat(tareas),
+            participacion: parseFloat(participacion)
+        };
+
+        fetch('http://localhost:5000/api/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert("Error: " + data.error);
+            } else {
+                // Mostrar resultado con animación
+                cajaResultado.classList.add('visible');
+                document.getElementById('resultado-text').textContent = `Nota Predicha: ${data.calificacion_predicha}`;
+                document.getElementById('metricas-text').textContent = `Precisión del Modelo -> MAE: ${data.mae} | RMSE: ${data.rmse}`;
+            }
+        })
+        .catch(error => alert('Error de conexión con el servidor.'));
+    }
+
+    // --- LÓGICA DE HISTORIAL ---
+    function cargarHistorial() {
+        const tbody = document.getElementById('tabla-historial').getElementsByTagName('tbody')[0];
+        const status = document.getElementById('historial-status');
+        tbody.innerHTML = ''; 
+
+        fetch('http://localhost:5000/api/historial')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) { status.textContent = "Error de carga"; return; }
+                if (data.length === 0) { status.textContent = "Sin datos aún."; return; }
+                
+                data.forEach(r => {
+                    const row = tbody.insertRow();
+                    row.insertCell().textContent = r.asistencia_porcentaje + "%";
+                    row.insertCell().textContent = r.tareas_completadas;
+                    row.insertCell().textContent = r.participacion;
+                    // Ponemos la nota en negrita
+                    const celdaNota = row.insertCell();
+                    celdaNota.textContent = r.calificacion_final.toFixed(2);
+                    celdaNota.style.fontWeight = "bold";
+                    celdaNota.style.color = "#4e54c8";
+                });
+                status.textContent = `Mostrando ${data.length} registros.`;
+            })
+            .catch(e => status.textContent = "Error de conexión.");
+    }
+
+    // --- LÓGICA DE GRÁFICO (Popup) ---
+    function mostrarGrafico() {
+        const btn = document.querySelector('button[onclick="mostrarGrafico()"]');
+        const txt = btn.textContent;
+        btn.textContent = "Generando...";
+        
+        fetch('http://localhost:5000/api/grafico')
+            .then(r => r.json())
+            .then(data => {
+                btn.textContent = txt;
+                if(data.grafico) {
+                    const html = `<html><head><title>Gráfico</title></head><body style="display:flex;justify-content:center;align-items:center;height:100vh;background:#eee;"><img src="data:image/png;base64,${data.grafico}" style="border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.2);"></body></html>`;
+                    const w = window.open("", "_blank", "width=900,height=700");
+                    w.document.write(html);
+                    w.document.close();
+                } else { alert("Error al cargar gráfico."); }
+            });
+    }
+
+    // --- LÓGICA DE COMENTARIOS ---
+    function enviarComentario() {
+        const texto = document.getElementById('texto-comentario').value.trim();
+        if(!texto) { alert("Escribe algo primero."); return; }
+
+        fetch('http://localhost:5000/api/comentar', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({comentario: texto})
+        }).then(r => r.json()).then(d => {
+            alert("¡Enviado! Gracias.");
+            document.getElementById('texto-comentario').value = "";
+        });
+    }
+
+    function verComentariosEnVentana() {
+        fetch('http://localhost:5000/api/comentarios')
+            .then(r => r.json())
+            .then(data => {
+                let list = data.length ? data.map(c => `<div style="border-bottom:1px solid #eee;padding:10px;"><i>"${c.comentario}"</i></div>`).join('') : "<p>Sin comentarios.</p>";
+                const html = `<html><body style="font-family:sans-serif;padding:30px;"><h2>💬 Comentarios</h2>${list}</body></html>`;
+                const w = window.open("", "_blank", "width=600,height=600,scrollbars=yes");
+                w.document.write(html);
+                w.document.close();
+            });
+    }
+    </script>
+
+</body>
+</html>

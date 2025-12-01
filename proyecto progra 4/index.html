@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido - Sistema ML</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+            --text-dark: #333;
+            --text-light: #fff;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            /* Fondo con degradado animado */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .hero-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            max-width: 800px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            color: var(--text-dark);
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+        .features {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        .feature {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            width: 200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        .icon { font-size: 2em; margin-bottom: 10px; display: block; }
+        
+        .btn-start {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 18px 50px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(78, 84, 200, 0.4);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(78, 84, 200, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-card">
+        <h1>Sistema de Predicción</h1>
+        <p class="subtitle">Análisis Académico con Inteligencia Artificial</p>
+
+        <div class="features">
+            <div class="feature">
+                <span class="icon">🤖</span>
+                <h3>Machine Learning</h3>
+                <small>Modelo de Regresión Lineal</small>
+            </div>
+            <div class="feature">
+                <span class="icon">📈</span>
+                <h3>Visualización</h3>
+                <small>Gráficos en tiempo real</small>
+            </div>
+            <div class="feature">
+                <span class="icon">💾</span>
+                <h3>Base de Datos</h3>
+                <small>Historial en PostgreSQL</small>
+            </div>
+        </div>
+
+        <a href="predictor.html" class="btn-start">🚀 Iniciar Aplicación</a>
+    </div>
+
+</body>
+</html>
